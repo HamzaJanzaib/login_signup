@@ -1,6 +1,6 @@
-const validregister = (req, res, next) => {
+module.exports.validregister = (req, res, next) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    
+
     const { firstname, lastname, email, password, age, phone, gender } = req.body;
 
     if (!firstname || !lastname || !email || !password || !age || !phone || !gender) {
@@ -30,4 +30,18 @@ const validregister = (req, res, next) => {
     next();
 };
 
-module.exports = validregister;
+module.exports.validlogin = (req, res, next) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ message: "Please fill in all fields" });
+    }
+
+    if (!emailRegex.test(email)) {
+        return res.status(400).json({ message: "Invalid email format" });
+    }
+
+    next();
+};
