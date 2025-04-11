@@ -33,9 +33,6 @@ const Register = () => {
         if (response.ok) {
           await response.json();
           navigate("/login");
-        } else {
-          const errorData = await response.json();
-          alert(errorData.error || "Error creating post");
         }
       } catch (error) {
         alert("Error submitting post");
