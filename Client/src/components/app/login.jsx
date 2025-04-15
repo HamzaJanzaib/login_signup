@@ -23,10 +23,10 @@ const Login = () => {
           },
           body: JSON.stringify(form),
         });
-
         if (response.ok) {
-          await response.json();
-          navigate("/dashboard"); 
+          const data = await response.json();
+          localStorage.setItem('token', data.token);
+          navigate("/dashboard");
         } else {
           const errorData = await response.json();
           alert(errorData.error || "Error logging in");
@@ -52,24 +52,24 @@ const Login = () => {
         <p className="title">Login</p>
         <p className="message">Login now and get full access to our app.</p>
         <label>
-          <input 
-            required 
-            type="email" 
-            className="input" 
-            name="email" 
-            value={form.email} 
-            onChange={handleInputChange} 
+          <input
+            required
+            type="email"
+            className="input"
+            name="email"
+            value={form.email}
+            onChange={handleInputChange}
           />
           <span>Email</span>
         </label>
         <label>
-          <input 
-            required 
-            type="password" 
-            className="input" 
-            name="password" 
-            value={form.password} 
-            onChange={handleInputChange} 
+          <input
+            required
+            type="password"
+            className="input"
+            name="password"
+            value={form.password}
+            onChange={handleInputChange}
           />
           <span>Password</span>
         </label>

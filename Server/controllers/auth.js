@@ -1,6 +1,7 @@
 const usermodel = require("../config/Models/user.model");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
+const jwt = require("jsonwebtoken");
 
 module.exports.register = async (req, res) => {
     try {
@@ -42,7 +43,8 @@ module.exports.login = async (req, res) => {
         if (!isPasswordValid) {
             return res.status(401).json({ message: "Invalid email or password" });
         }
-        res.status(200).json({ message: "Login successful" });
+        const token = jwt.sign({ email: user.email, id: user._id }, process.env.JWT_SECRET, { expiresIn: "4h" });
+        res.status(200).json({ message: "Login successful", token });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal server error" });

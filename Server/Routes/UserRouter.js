@@ -1,10 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const { register , login} = require('../controllers/auth');
+const { register, login } = require('../controllers/auth');
 const { validregister, validlogin } = require('../Middleware/validregister');
 
-router.get("/", (req, res) => {
-    res.send("Hello, World!");
+router.get("/register", (req, res) => {
+    res.send("register");
+});
+router.get("/login", (req, res) => {
+    res.send("git token and send");
 });
 
 router.post("/register", validregister, register)

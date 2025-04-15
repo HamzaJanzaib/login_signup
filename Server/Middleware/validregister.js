@@ -1,9 +1,9 @@
 module.exports.validregister = (req, res, next) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-    const { firstname, lastname, email, password, age, phone, gender } = req.body;
+    const { firstname, lastname, email, password, age, gender } = req.body;
 
-    if (!firstname || !lastname || !email || !password || !age || !phone || !gender) {
+    if (!firstname || !lastname || !email || !password || !age || !gender) {
         return res.status(400).json({ message: "Please fill in all fields" });
     }
 
@@ -21,10 +21,6 @@ module.exports.validregister = (req, res, next) => {
 
     if (age < 18) {
         return res.status(400).json({ message: "Age must be at least 18" });
-    }
-
-    if (phone.length < 10) {
-        return res.status(400).json({ message: "Phone number must be at least 10 digits" });
     }
 
     next();
