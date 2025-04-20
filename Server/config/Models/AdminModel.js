@@ -1,15 +1,15 @@
 const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema({
+const AdminSchema = new mongoose.Schema({
     firstname: {
         type: String,
         required: true,
-        minlength: 4
+        minlength: 2
     },
     lastname: {
         type: String,
         required: true,
-        minlength: 4
+        minlength: 2
     },
     email: {
         type: String,
@@ -22,24 +22,15 @@ const userSchema = new mongoose.Schema({
         required: true,
         minlength: 6
     },
-    age: {
-        type: Number,
-        required: true
-    },
     phone: {
         type: String,
         required: true
     },
-    gender: {
-        type: String,
-        required: true,
-        enum: ['male', 'female', 'other']
-    },
     role: {
         type: String,
-        default: 'user',
-        enum: ['user', 'admin']
+        default: 'admin',
+        enum: ['admin']
     }
 }, { timestamps: true });
 
-module.exports = mongoose.model("user", userSchema);
+module.exports = mongoose.model("Admin", AdminSchema);

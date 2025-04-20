@@ -6,6 +6,7 @@ import styled from 'styled-components';
 const Register = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [form, setForm] = useState({
     firstname: '',
     lastname: '',
@@ -18,6 +19,36 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    
+    if (!form.firstname || !form.lastname || !form.email || !form.password || !form.age || !form.gender || !form.phone) {
+      setError("Please enter all fields");
+      return;
+    }
+    if (form.age < 18) {
+      setError("Age must be at least 18");
+      return;
+    }
+    if (form.password.length < 6) {
+      setError("Password must be at least 6 characters");
+      return;
+    }
+    if (form.firstname.length < 4 || form.lastname.length < 4) {
+      setError("First name and last name must be at least 4 characters");
+      return;
+    }
+    if (!form.email.includes("@")) {
+      setError("Invalid email format");
+      return;
+    }
+    if (!form.phone) {
+      setError("Please enter a phone number");
+      return;
+    }
+    if (!form.gender) {
+      setError("Please select a gender");
+      return;
+    }
 
     if (form.firstname && form.lastname && form.email && form.password && form.age && form.gender && form.phone) {
       setLoading(true);
@@ -33,14 +64,17 @@ const Register = () => {
         if (response.ok) {
           await response.json();
           navigate("/login");
+        } else {
+          const errorData = await response.json();
+          setError(errorData.message || "An error occurred during registration");
         }
       } catch (error) {
-        alert("Error submitting post");
+        setError("Error submitting registration");
       } finally {
         setLoading(false);
       }
     } else {
-      alert("plase enter all fields");
+      setError("Please enter all fields");
     }
   };
 
@@ -54,6 +88,7 @@ const Register = () => {
       <form className="form" onSubmit={handleSubmit}>
         <p className="title">Register </p>
         <p className="message">Register now and get full access to our app. </p>
+        {error && <p className="error">{error}</p>}
         <div className="flex">
           <label>
             <input required placeholder type="text" className="input" name="firstname" onChange={handleInputChange} />
@@ -215,6 +250,12 @@ const StyledWrapper = styled.div`
 
   .submit:hover {
     background-color: rgb(56, 90, 194);
+  }
+
+  .error {
+    color: red;
+    font-size: 14px;
+    text-align: center;
   }
 
   @keyframes pulse {

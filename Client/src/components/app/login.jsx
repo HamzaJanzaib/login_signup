@@ -5,6 +5,7 @@ import styled from 'styled-components';
 const Login = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -12,32 +13,51 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
 
-    if (form.email && form.password) {
-      setLoading(true);
-      try {
-        const response = await fetch("http://localhost:3000/users/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(form),
-        });
-        if (response.ok) {
-          const data = await response.json();
-          localStorage.setItem('token', data.token);
-          navigate("/dashboard");
-        } else {
-          const errorData = await response.json();
-          alert(errorData.error || "Error logging in");
-        }
-      } catch (error) {
-        alert("Error submitting login form");
-      } finally {
-        setLoading(false);
+    if (!form.email || !form.password) {
+      setError("Please enter all fields");
+      return;
+    }
+    if (!form.email.includes("@")) {
+      setError("Invalid email format");
+      return;
+    }
+    if (form.password.length < 6) {
+      setError("Password must be at least 6 characters");
+      return;
+    }
+    if (!form.password) {
+      setError("Please enter a password");
+      return;
+    }
+    if (!form.email) {
+      setError("Please enter an email");
+      return;
+    }
+    
+
+    setLoading(true);
+    try {
+      const response = await fetch("http://localhost:3000/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem('token', JSON.stringify(data.token));
+        navigate("/profile");
+      } else {
+        const errorData = await response.json();
+        setError(errorData.error || "Error logging in");
       }
-    } else {
-      alert("Please enter all fields");
+    } catch (error) {
+      setError("Error submitting login form");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -51,6 +71,7 @@ const Login = () => {
       <form className="form" onSubmit={handleSubmit}>
         <p className="title">Login</p>
         <p className="message">Login now and get full access to our app.</p>
+        {error && <p className="error">{error}</p>}
         <label>
           <input
             required
@@ -134,6 +155,12 @@ const StyledWrapper = styled.div`
   .message, .signin {
     color: rgba(88, 87, 87, 0.822);
     font-size: 14px;
+  }
+
+  .error {
+    color: red;
+    font-size: 14px;
+    text-align: center;
   }
 
   .signin {

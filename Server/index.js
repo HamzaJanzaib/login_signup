@@ -2,9 +2,9 @@ const express = require('express');
 const dotenv = require("dotenv");
 const connectDB = require('./config/connect-mongodb.js');
 const userRoutes = require('./Routes/UserRouter.js');
+const AdminRouter = require('./Routes/Admin/AdminRouter.js');
 const cors = require("cors");
 const path = require('path');
-const ProductsRouter = require('./Routes/Admin/ProductsRouter.js');
 
 
 
@@ -18,7 +18,7 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, 'Client', 'dist')));
 
 app.use('/users', userRoutes);
-app.use('/products', ProductsRouter);
+app.use('/admin', AdminRouter);
 
 const startServer = async () => {
     try {
